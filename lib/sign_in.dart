@@ -1,3 +1,4 @@
+import 'home.dart';
 import 'package:flutter/material.dart';
 import 'sign_Up.dart';
 import 'forgot_password.dart';
@@ -38,10 +39,12 @@ class _SignInPageState extends State<SignInPage> {
                 child: SingleChildScrollView(
                   child: Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 32),
                     decoration: const BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
+                      borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(40)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,7 +62,8 @@ class _SignInPageState extends State<SignInPage> {
                         const SizedBox(height: 10),
 
                         // Email
-                        const Text("Email", style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text("Email", style: TextStyle(
+                            fontWeight: FontWeight.bold)),
                         const SizedBox(height: 8),
                         TextField(
                           controller: _emailController,
@@ -77,7 +81,8 @@ class _SignInPageState extends State<SignInPage> {
                         const SizedBox(height: 16),
 
                         // Password
-                        const Text("Password", style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text("Password", style: TextStyle(
+                            fontWeight: FontWeight.bold)),
                         const SizedBox(height: 8),
                         TextField(
                           controller: _passwordController,
@@ -116,13 +121,18 @@ class _SignInPageState extends State<SignInPage> {
                             GestureDetector(
                               onTap: () {
                                 Navigator.of(context).pop();
-                                Future.delayed(const Duration(milliseconds: 200), () {
+                                Future.delayed(
+                                    const Duration(milliseconds: 200), () {
                                   Navigator.of(context).push(
                                     PageRouteBuilder(
                                       opaque: false,
-                                      pageBuilder: (_, __, ___) => const ForgotPasswordPage(),
-                                      transitionsBuilder: (_, animation, __, child) {
-                                        final tween = Tween(begin: const Offset(0, 1), end: Offset.zero);
+                                      pageBuilder: (_, __,
+                                          ___) => const ForgotPasswordPage(),
+                                      transitionsBuilder: (_, animation, __,
+                                          child) {
+                                        final tween = Tween(
+                                            begin: const Offset(0, 1),
+                                            end: Offset.zero);
                                         return SlideTransition(
                                           position: animation.drive(tween),
                                           child: child,
@@ -146,6 +156,7 @@ class _SignInPageState extends State<SignInPage> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: _handleSignIn,
+
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF486abf),
                               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -155,7 +166,9 @@ class _SignInPageState extends State<SignInPage> {
                             ),
                             child: const Text(
                               "Sign in",
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                              style: TextStyle(fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
                             ),
                           ),
                         ),
@@ -196,17 +209,23 @@ class _SignInPageState extends State<SignInPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text("Don't have an account?", style: TextStyle(color: Colors.black54)),
+                            const Text("Don't have an account?",
+                                style: TextStyle(color: Colors.black54)),
                             GestureDetector(
                               onTap: () {
                                 Navigator.of(context).pop();
-                                Future.delayed(const Duration(milliseconds: 200), () {
+                                Future.delayed(
+                                    const Duration(milliseconds: 200), () {
                                   Navigator.of(context).push(
                                     PageRouteBuilder(
                                       opaque: false,
-                                      pageBuilder: (_, __, ___) => const SignUpPage(),
-                                      transitionsBuilder: (_, animation, __, child) {
-                                        final tween = Tween(begin: const Offset(0, 1), end: Offset.zero);
+                                      pageBuilder: (_, __,
+                                          ___) => const SignUpPage(),
+                                      transitionsBuilder: (_, animation, __,
+                                          child) {
+                                        final tween = Tween(
+                                            begin: const Offset(0, 1),
+                                            end: Offset.zero);
                                         return SlideTransition(
                                           position: animation.drive(tween),
                                           child: child,
@@ -248,31 +267,36 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   void _handleSignIn() {
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
+
+    bool hasError = false;
+    String? newEmailError;
+    String? newPasswordError;
+
+    if (email.isEmpty) {
+      newEmailError = "Please enter your email.";
+      hasError = true;
+    } else if (!email.contains('@') || !email.contains('.')) {
+      newEmailError = "Please enter a valid email.";
+      hasError = true;
+    }
+
+    if (password.isEmpty) {
+      newPasswordError = "Please enter your password.";
+      hasError = true;
+    }
+
+    // Update UI
     setState(() {
-      emailError = null;
-      passwordError = null;
-
-      String email = _emailController.text.trim();
-      String password = _passwordController.text.trim();
-
-      bool hasError = false;
-
-      if (email.isEmpty) {
-        emailError = "Please enter your email.";
-        hasError = true;
-      } else if (!email.contains('@') || !email.contains('.')) {
-        emailError = "Please enter a valid email.";
-        hasError = true;
-      }
-
-      if (password.isEmpty) {
-        passwordError = "Please enter your password.";
-        hasError = true;
-      }
-
-      if (!hasError) {
-        // Proceed with actual sign in logic
-        // Example: authenticateUser(email, password);
-      }
+      emailError = newEmailError;
+      passwordError = newPasswordError;
     });
+
+    // Navigate if no errors
+    if (!hasError) {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => const HomePage()), // ← your HomePage
+      );
+    }
   }}
